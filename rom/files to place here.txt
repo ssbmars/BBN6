@@ -1,0 +1,9 @@
+add the following files to this directory:
+
+(the file names must match exactly)
+
+bn6f.gba (MegaMan Battle Network 6 Falzar GBA ROM, English version)
+md5 hash: 1e8c774ba210d1c55113531c7360c737
+
+bn6g.gba (MegaMan Battle Network 6 Gregar GBA ROM, English version)
+md5 hash: 5acc75848bb1ffd3d6d8705554ee333d
