@@ -1,1 +1,35 @@
+NOTES
 
+System I/O for Multiplayer mode
+Memory Address	Known Values		Breakdown
+0x4000128h		[0B]				>binary>[00001011]
+				[8B]				>binary>[10001011]
+
+0x4000129h		[60]				>binary>[01100000]
+
+	bit 0-1 represent the baud rate used, with the current value (3)
+		representing the highest baud rate the GBA can handle.
+		
+	bit 2 represents the SI-Terminal(SI-T) value, which 
+		shows if it is a parent(0) or child(1)
+	
+	bit 3 represents the SD-Terminal(SD-T) which shows if there are
+		connection issues for any involved GBA (0 = bad connection, 1 = ALL GBA ready)
+		
+	bit 4-5 represents the Multiplayer ID, where (0) = parent, and (1-3) represent which child
+		this GBA is
+	
+	bit 6 represents the Multi-Player Error flag, which is (0)if everything is fine
+		and (1) if there is an error
+	
+	bit 7 represents the start/busy bit, which should be Read-Only for child units
+	
+	bits 8-11 aren't used and default to 0
+	
+	bit 12 has to be (0) for Multi-Player mode to function
+	
+	bit 13 must be (1) for Multi-Player mode to function
+	
+	bit 14 represents whether or not IRQ Enable is disabled(0) or wants IRQ upon completion(1)
+	
+	bit 15 is not used and is always 0
