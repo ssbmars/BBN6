@@ -1,6 +1,11 @@
 NOTES
 
 System I/O for Multiplayer mode
+
+		!NOTICE!
+		for anyone not used to reading memory locations, it should be made clear that memory locations are read from right to left,
+		meaning that if you see something like [00001011] the "0th" bit is the rightmost(1), not the leftmost(0).
+
 Memory Address	Known Values		Breakdown
 0x4000128h		[0B]				>binary>[00001011]
 				[8B]				>binary>[10001011]
@@ -8,7 +13,7 @@ Memory Address	Known Values		Breakdown
 0x4000129h		[60]				>binary>[01100000]
 
 	bit 0-1 represent the baud rate used, with the current value (3)
-		representing the highest baud rate the GBA can handle.
+		representing the highest baud rate the GBA can handle, which is 115200 bps.
 		
 	bit 2 represents the SI-Terminal(SI-T) value, which 
 		shows if it is a parent(0) or child(1)
@@ -33,3 +38,101 @@ Memory Address	Known Values		Breakdown
 	bit 14 represents whether or not IRQ Enable is disabled(0) or wants IRQ upon completion(1)
 	
 	bit 15 is not used and is always 0
+	
+...128h and 129h make up the single value that is the SIO Control.
+
+The 0B60 value represents the parent GBA using the maximum baud rate, with all GBA ready
+but not sending any data at the moment (bit 7 is 0) in normal Multi-Player mode, requesting IRQ
+upon completion (assumedly of a data transfer).
+
+
+
+I/O Keypad Input
+
+The keypad input data is read and transferred once per frame it seems.
+each bit is either Released(1) or Pressed(0)
+this is stored at location 4000130h as a single 16 bit value
+
+Bit		Explanation
+
+0	 	Button A
+1		Button B
+2		Select
+3		Start
+4		Right
+5		Left
+6		Up
+7		Down
+8		Shoulder Button R
+9		Shoulder Button L
+10-15	NOT USED
+
+As an example, FF03 would represent a state where no buttons are being pressed.
+[11111111] = FF [00000011] = 03
+
+
+Games use Multi-Player mode when communicating with one another, but it
+isn't 100% clear how the wireless adapter ties into that setup, and I don't
+think any emulators have a "working" version of the device. I'll look into it another time.
+It is known  that the adapter does have a login system and matchmaking of some kind.
+
+
+[TODO] For LINK multiplayer, 
+
+[TODO]
+
+
+
+despite using pseudo-RNG in a few (2) places, battle seems to be completely deterministic already,
+the RNG1 and RNG2 values seem to be synced at some point during multiplayer starting, but I have not confirmed this.
+
+KNOWN LOCATIONS/VALUES (some of these come from the TeamBN HUD script, and i haven't confirmed those yet, but they look correct.)
+
+
+GAMESTATE 
+
+location		value		explanation
+addresses.folder_ID           = 0; -- every other byte, chip  ID  of folder slot 1, ends at 0x020001FA
+addresses.folder_code         = 0; -- every other byte, chip code of folder slot 1, ends at 0x020001FB
+addresses.music_progress      = 0; -- 1 byte
+addresses.battle_paused       = 0; -- 1 byte, flag 0x01
+addresses.buster_attack       = 0; -- 1 byte, 0 indexed, can't change mid-battle
+addresses.buster_rapid        = 0; -- 1 byte, 0 indexed, can't change mid-battle
+addresses.buster_charge       = 0; -- 1 byte, 0 indexed, can't change mid-battle
+addresses.HP_max_1            = 0; -- 2 bytes, max is 0x03E8
+addresses.HP_max_2            = 0; -- 2 bytes, max is 0x03E8
+addresses.HPMemory            = 0; -- 1 byte, collected
+
+-- 001100 - 0011FF
+
+addresses.lazy_RNG            = 0x02001120; -- 4 bytes, resets and pauses on the title screen
+
+-- 001300 - 0013FF
+
+addresses.main_RNG            = 0x020013F0; -- 4 bytes, resets and pauses on the title screen
+
+-- 034800 - 0348FF
+
+addresses.enemy_ID            = 0x020348D4; -- 2 bytes
+addresses.enemy_ID_2          = 0x020348D6; -- 2 bytes
+addresses.enemy_ID_3          = 0x020348D8; -- 2 bytes
+
+-- 03AA00 - 03AAFF
+
+addresses.enemy_HP            = 0x0203AAAC; -- 2 bytes, which_enemy * 0xC0
+
+-- 03AB00 - 03ABFF
+
+addresses.enemy_HP_2          = 0x0203AB84; -- 2 bytes, which_enemy * 0xC0
+
+-- 03AC00 - 03ACFF
+
+addresses.enemy_HP_3          = 0x0203AC5C; -- 2 bytes, which_enemy * 0xC0
+
+-- 03CA00 - 03CAFF
+
+addresses.battle_state        = 0x0203CA70;
+
+-- 03CE00 - 03CEFF
+
+addresses.base_HP             = 0x0203CE3E;
