@@ -121,6 +121,34 @@ addresses.enemy_ID_3          = 0x020348D8; -- 2 bytes
 
 addresses.enemy_HP            = 0x0203AAAC; -- 2 bytes, which_enemy * 0xC0
 
+	WN - if this value is changed during multiplayer on one end only, the other player does not appear to sync up with it during battle.
+	This can cause a problem where one player is killed on one player's screen and not the other, multiplayer will lock up, as the dead player's screen
+	goes blank in preparation for the next battle, but the player who sees them as alive is still mid-battle. The game doesn't soft lock until the player with
+	the incorrect value opens the custom screen, as it needs input from the other player to exit that cannot be given.
+	
+addresses.enemy_HP_Max		  =	0x0203AAAE; -- 2 bytes
+		
+	WN - the first "enemy" data block seems to always refer to player 2. even though both players appear on red side, the child, or player 2,
+	is in the same location in memory for both players.
+	
+	WN - It should be noted that if a player's health ever hits 0 or lower it stops being visible, but it does continue to update. In the event of a rollback where someone dies, the
+	value or function that sets visibility for HP should be turned back on (value currently unknown)
+	
+addresses.??				  = 0x0203AAB0; -- 2 bytes
+	WN - This address is currently unknown, but it's value is identical to the Enemy ID 1 value at 0x020348D4.
+	
+addresses.enemy_weaponID	  = 0x0203AAB2; -- 1 bytes?
+
+	WN- this value is FF when there are no chips remaining in the player's queue. The value placed in this address matches up with the values in the chip library. 
+	value			chip
+	05				Vulcan1 D
+	47				Sword S
+	48				WideSwrd S
+	
+addresses.??	  			  = 0x0203AAB3; -- 1 bytes?
+	WN - It's not 100% clear yet what this value is: It changes to FF when the player has no chips left for the turn, but if they have chips available it is 00.
+		I have yet to see it be any value other than either 00 or FF. sub-weapon perhaps?
+		
 -- 03AB00 - 03ABFF
 
 addresses.enemy_HP_2          = 0x0203AB84; -- 2 bytes, which_enemy * 0xC0
