@@ -148,7 +148,13 @@ addresses.enemy_weaponID	  = 0x0203AAB2; -- 1 bytes?
 addresses.??	  			  = 0x0203AAB3; -- 1 bytes?
 	WN - It's not 100% clear yet what this value is: It changes to FF when the player has no chips left for the turn, but if they have chips available it is 00.
 		I have yet to see it be any value other than either 00 or FF. sub-weapon perhaps?
-		
+
+addresses.enemy_Location_X,   =	0x0203AABE; - 1 byte
+	WN - Player X location, varies between 14, 3C and 64 for front, middle, and rear columns respectively.
+	
+addresses.enemuy_Location_Y,  = 0X0203AAC2; - 1 byte
+	WN - Player Y location, varies between 04, 1C, 34
+	
 -- 03AB00 - 03ABFF
 
 addresses.enemy_HP_2          = 0x0203AB84; -- 2 bytes, which_enemy * 0xC0
