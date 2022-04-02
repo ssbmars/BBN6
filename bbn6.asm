@@ -49,8 +49,6 @@ VERBOSE equ 0
 
 //	.org 0x08000000
 
-;.org InputRoutineHook
-;	.dw InputRoutine|1
 
 // windrack: delay the movement of the invisible gusts so that players will get moved by the gusts regardless of their entity update order if they're hit point blank while they are being protected by a barrier
 
@@ -58,13 +56,6 @@ VERBOSE equ 0
 	.org RedirectWindrack
 		.dw WindrackJumpTable
 	
-	// after spawning the gusts, repoint their next frame of logic
-	// to a new routine that does nothing for 1 frame
-	.org WindRFirstMove
-		mov		r0,0Ch
-		strb	r0,[r5,8h]
-		nop
-		nop
 // endrack
 
 // BDT and Thunder: when the targeted character is on the same panel as the thunder ball, make the ball move in a relative "forward" direction instead of moving in a hardcoded direction that ignores which side spawned the thunder
@@ -82,31 +73,59 @@ VERBOSE equ 0
 
 
 
+//  ============  //	Freed up space (from repointing existing functions)
 
-// this space is from a routine that was repointed and is no longer in use, so it's free to modify
+
+// this space is from the Thunder code
 .org freedspace1
-.sym off :: .area 0x080C95D8 - 0x080C957C, 0x0	:: .sym on
+	.sym off :: .area 0x080C95E6 - 0x080C957C, 0x0	:: .sym on
+	/*
+	.definelabel func2, 0x08007004
+
+	push	r4-r7,r14
+	mov		r7,r0
+	bl
+	mov		r0,r7
+	ldr		r5,=
+	mov		r4,r0
+	bl		
+	bne		@@b2
+	mov		r0,r4
+	mov		r1,0ABh
+	bl		
+	ldr		r3,=
+	ldrh	r1,[r3,2Ah]
+	add		r0,r0,r1
+	cmp		r0,50h
+	bgt		@@b1
+	strh	r0,[r3,2Ah]
+	ldrb	r0,[r3]
+	mov		r1,r0
+	add		r1,1h
+	strb	r1,[r3]
+	mov		r1,r4
+	bl		
+	mov		r0,0h
+	b		@@exit
+	@@b2:
+	mov		r0,2h
+	b		@@exit
+	@@b1:
+	mov		r0,1h
+	@@exit:
+	pop		r4-r7,r15
 
 
-.sym off :: .endarea :: .sym on
+	func1:
+	push	r14
+	sub		r1,r0,1h
+	bl		func2
+	pop		r15
+	*/
 
 
-
-//	Free Space in the middle of the rom
-	//	(I don't actually know for certain that this space isn't used for something)
-	//	(whenever possible, use expanded space at the end of the rom instead)
-	
-	.org 0x0803D340
-	
-	.area 0x0803DC30 - 0x0803D340, 0x0
-	
-	//  ============  //	new routines go here
-	
-	
-	
-	
-	.endarea
-// end of mid-rom freespace zone
+	.sym off :: .endarea :: .sym on
+// end of freedspace1
 
 
 
@@ -116,197 +135,8 @@ VERBOSE equ 0
 
 //  ============  //	new routines go here
 
-/*
-InputRoutine:
-	push	r4-r7,r14
-	add		sp,-4h
-	cmp		r0,2h
-	bne		@@exit
-	ldr		r4,=203F7D8h
-	ldr		r5,=20399F0h
-	mov		r6,r10
-	ldr		r6,[r6,18h]
-	ldr		r7,=203F4A0h
-	ldrh	r1,[r5,2h]		// read the input that will be used this frame
-	mov		r2,0FCh
-	lsl		r2,r2,8h
-	and		r2,r1
-	beq		@@nametbd		// branch if no button is being pressed
 
-	mov		r0,0h
-	bl		applyinputs		// 0801FF36  bl 800A0D6h
 
-	ldrb	r1,[r5,6h]
-	strb	r1,[r6,14h]
-	ldrh	r1,[r5,0Ch]
-	ldr		r0,=2036120h
-	strh	r1,[r0,2Ch]
-	mov		r0,4h
-	ldsb	r0,[r5,r0]
-	tst		r0,r0
-	blt		@@nametbd
-
-	lsl		r0,r0,2h
-	ldr		r1,[r5,8h]
-	str		r1,[r7,r0]
-
-	@@nametbd:
-	// looks like this is player2's inputs
-	add		r5,10h
-	ldr		r7,=203FFA0h
-	ldrb	r1,[r4]
-	tst		r1,r1
-	beq		@@nametbd2
-
-	ldrh	r1,[r5,2h]
-	mov		r2,0FCh
-	lsl		r2,r2,8h
-	and		r2,r1
-	beq		@@nametbd3
-
-	@@nametbd2:
-	mov		r0,1h
-	bl		applyinputs
-	ldrb	r1,[r5,6h]
-	strb	r1,[r6,15h]
-	ldrh	r1,[r5,0Ch]
-	ldr		r0,=20362F0h
-	strh	r1,[r0,2Ch]
-	mov		r0,4h
-	ldsb	r0,[r5,r0]
-	tst		r0,r0
-	blt		@@nametbd3:
-	lsl		r0,r0,2h
-	ldr		r1,[r5,8h
-	str		r1,[r7,r0]
-
-	@@nametbd3:
-	ldr		r5,=2036780h
-	mov		r0,r10
-	ldr		r0,[r0,4h]
-	ldrh	r1,[r0]
-	strh	r1,[r5,2h]	// copy inputs from this frame to be processed next frame
-	str		r1,[sp]		// I'm unsure why it's also copied to the stack
-	mov		r0,r10
-	ldr		r0,[r0,18h]
-	ldrb	r1,[r0,11h]
-	strb	r1,[r5,6h]
-	mov		r0,4h
-	bl		func2		// 0801FF9A  bl 803F740h
-
-	strh	r0,[r5,0Ch]
-	ldrb	r0,[r4,2h]
-	mov		r1,1h
-	tst		r0,r1
-	beq		@@finishup
-
-	bl		func3		// 0801FFA8  bl 803EA2Ch
-	tst		r0,r0
-	bne		@@exit
-	mov		r0,3h
-	ldsb	r0,[r4,3h]
-	blt		@@finishup
-	strb	r0,[r5,4h]
-	lsl		r0,r0,2h
-	ldr		r1,=203CBE0h
-	ldr		r0,[r0,r1]
-	str		r0,[r5,8h]
-	b		@@exit
-
-	@@finishup:
-	ldrb	r0,[r4,2h]
-	mov		r1,1h
-	bic		r0,r1
-	strb	r0,[r4,2h]
-	mov		r0,0FFh
-	strb	r0,[r5,4h]
-	@@exit:
-	add		sp,4h
-	pop		r4-r7,r15
-
-	.pool
-
-	//	auxiliary functions
-
-	applyinputs:
-	// r0 is a parameter to adjust which address gets affected
-	lsl		r0,r0,3h
-	ldr		r3,=2036820h
-	add		r3,r3,r0
-	ldrh	r2,[r3,2h]
-	strh	r1,[r3,2h]
-	mvn		r0,r2
-	and		r0,r1
-	strh	r0,[r3,4h]
-	mvn		r0,r1
-	and		r2,r0
-	strh	r2,[r3,6h]
-	mov		r15,r14
-	
-	func2:
-	push	r4-r7,r14
-	mov		r7,r0
-	bl		subfunc1
-	ldr		r1,=803FF774h
-	ldrb	r0,[r1,r0]
-	cmp		r0,0FFh
-	beq		@@yes
-	mov		r1,8h
-	mul		r1,r7
-	add		r1,r1,r0
-	ldr		r7,=20099D0h
-	ldrh	r2,[r7,10h]
-	ldrh	r0,[r7,16h]
-	mov		r1,0h
-	b		@@exit
-	@@yes:
-	mov		r1,1h
-	mov		r0,0h
-	@@exit:
-	pop		r4-r7,r15
-	
-	subfunc1:
-	push	r7,r14
-	bl		subfunc2
-	mov		r1,r0
-	cmp		r1,0h
-	beq		@@yes
-	mov		r0,0h
-	cmp		r1,4h
-	beq		@@exit
-	mov		r0,1h
-	cmp		r1,8h
-	beq		@@exit
-	@@yes:
-	ldr		r7,=20099D0h
-	ldr		r0,[r7,48h]
-	mov		r1,3h
-	and		r0,r1
-	lsl		r0,r0,0h
-	@@exit:
-	tst		r0,r0
-	pop		r7,r15
-	
-	subfunc2:
-	ldr		r1,=200BC30h
-	ldrb	r0,[r1]
-	mov		r15,r14
-	
-	func3:
-	push	r14
-	mov		r0,0h
-	ldr		r1,=20099D0h
-	ldrb	r1,[r1]
-	cmp		r1,0Ch
-	bne		@@exit
-	mov		r0,1h
-	@@exit:
-	pop		r15
-
-	// ldr pool for all the aux functions
-	.pool
-// end of modified input routine
-*/
 
 
 // the entire function is taken directly from the game and pasted here so it can be modified more freely
@@ -412,22 +242,40 @@ tmGetFacing:
 
 
 .align 0x4
-symoff
 WindrackJumpTable:
-	.dw WindRStep1|1
+	.dw WindRWaitStep|1
 	.dw WindRStep2|1
 	.dw DeleteSpell|1
-	.dw WindRWaitStep|1
-.sym on
+	.dw WindRStep1|1
+
 
 WindRWaitStep:
 	// this just exists to stall the windrack gust logic for a frame before it starts moving
 	push	r14
 	// advance to next step
-	mov		r0,4h
+	mov		r0,0Ch
 	str		r0,[r5,8h]
 
 	pop		r15
+
+
+
+
+//	Free Space in the middle of the rom
+	//	(I don't actually know for certain that this space isn't used for something)
+	//	(whenever possible, use expanded space at the end of the rom instead)
+	
+	.org 0x0803D340
+	
+	.area 0x0803DC30 - 0x0803D340, 0x0
+	
+	//  ============  //	new routines go here
+	
+	
+	
+	
+	.endarea
+// end of mid-rom freespace zone
 
 
 .close

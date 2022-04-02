@@ -1,8 +1,4 @@
 
-.definelabel InputRoutineHook, 0x0801FF08
-	.sym off
-.definelabel WindRFirstMove, 0x080CD3A2
-	.sym on
 .definelabel RedirectWindrack, 0x080CD300
 .definelabel WindRStep1, 0x080CD310
 .definelabel WindRStep2, 0x080CD3B0
