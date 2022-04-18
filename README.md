@@ -16,5 +16,3 @@ When Thunder or BugDeathThunder is on the same panel as the character that it's 
 
 ## Clarification
 The extra B in BBN6 stands for Bingus  
-
-Unlike the old version of BBN3 netcode, the new implementation of rollback netcode does not require any changes on the part of the rom, so BN6 Tango netplay can be played without this romhack.
