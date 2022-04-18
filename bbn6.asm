@@ -11,19 +11,19 @@ VERBOSE equ 0
 .endmacro
 
 .if VERSION == BN6F
-	.open "rom\bn6f.gba","output\output_bn6f.gba",0x8000000
+	.open "rom\bn6f.gba","out\output_bn6f.gba",0x8000000
 	.include "asm\bn6f_sym.asm"
 
 .elseif VERSION == BN6G
-	.open "rom\bn6g.gba","output\output_bn6g.gba",0x8000000
+	.open "rom\bn6g.gba","out\output_bn6g.gba",0x8000000
 	.include "asm\bn6g_sym.asm"
 
 .elseif VERSION == EXE6F
-	.open "rom\exe6f.gba","output\output_exe6f.gba",0x8000000
+	.open "rom\exe6f.gba","out\output_exe6f.gba",0x8000000
 	.include "asm\exe6f_sym.asm"
 
 .elseif VERSION == EXE6G
-	.open "rom\exe6g.gba","output\output_exe6g.gba",0x8000000
+	.open "rom\exe6g.gba","out\output_exe6g.gba",0x8000000
 	.include "asm\exe6g_sym.asm"
 
 .endif
