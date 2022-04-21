@@ -116,12 +116,6 @@ VERBOSE equ 0
 		// shuffle rng a bunch of times, for fun
 		push	r7
 		ldr		r7,=0x20013F4
-		
-		// dummy numbers
-		mov		r0,45h
-		strb	r0,[r7]
-		mov		r0,69h
-		strb	r0,[r7,1h]
 
 		ldrb	r4,[r7]
 		tst		r4,r4
