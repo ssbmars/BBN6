@@ -111,6 +111,40 @@ VERBOSE equ 0
 // this space is from the Thunder code
 .org freedspace1
 	.sym off :: .area 0x080C95E6 - 0x080C957C, 0x0	:: .sym on
+
+	TheShuffler:
+		// shuffle rng a bunch of times, for fun
+		push	r7
+		ldr		r7,=0x20013F4
+		
+		// dummy numbers
+		mov		r0,45h
+		strb	r0,[r7]
+		mov		r0,69h
+		strb	r0,[r7,1h]
+
+		ldrb	r4,[r7]
+		tst		r4,r4
+		beq		@@part2
+		@@loop1:
+		bl		0x800154C
+		sub		r4,1h
+		bne		@@loop1
+		strb	r4,[r7]
+		@@part2:
+		ldrb	r4,[r7,1h]
+		tst		r4,r4
+		beq		@@adios
+		@@loop2:
+		bl		0x800151C
+		sub		r4,1h
+		bne		@@loop2
+		strb	r4,[r7,1h]
+		@@adios:
+		pop		r7,r15
+		.pool
+
+
 	/*
 	.definelabel func2, 0x08007004
 
@@ -214,7 +248,9 @@ DarkBoot2:
 	mov		r1,10h
 	strb	r1,[r0,4h]
 
-	pop		r15
+	ldr		r0,=TheShuffler|1
+	bx		r0
+	//pop		r15
 	poool
 
 // the entire function is taken directly from the game and pasted here so it can be modified more freely
