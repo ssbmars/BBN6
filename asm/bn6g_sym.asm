@@ -7,6 +7,7 @@
 .definelabel ThunderHook, 0x080CADDC
 
 .definelabel BootScene1, 0x0803D210
+.definelabel BootScene2, 0x0802F5A0
 
 .definelabel screenio1, 0x080004BE
 .definelabel screenio2, 0x0803D1E4

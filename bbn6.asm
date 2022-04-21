@@ -76,7 +76,7 @@ VERBOSE equ 0
 //	skip the capcom logo
 .org BootScene1
 	mov		r0,10h
-.org 0x0802F5A0
+.org BootScene2
 	mov		r0,0Ch
 
 
