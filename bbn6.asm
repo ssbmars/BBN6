@@ -51,6 +51,37 @@ VERBOSE equ 0
 //	.org 0x08000000
 
 
+
+// boot to black screen with a very early hook
+.org 0x080000D0
+	.arm
+	ldr		r0,=DarkBoot1
+	bx		r0
+	poool
+	DarkBoot1Return:
+	.thumb
+
+
+//	maintain black screen during startup
+.org screenio1
+	mov		r0,40h
+.org screenio2
+	mov		r0,40h
+.org screenio3
+	ldr		r0,=DarkBoot2|1
+	bx		r0
+	poool
+	nop
+
+//	skip the capcom logo
+.org BootScene1
+	mov		r0,10h
+.org 0x0802F5A0
+	mov		r0,0Ch
+
+
+
+
 // windrack: delay the movement of the invisible gusts so that players will get moved by the gusts regardless of their entity update order if they're hit point blank while they are being protected by a barrier
 
 	// point to a new table of routines for windrack's logic
@@ -136,9 +167,55 @@ VERBOSE equ 0
 
 //  ============  //	new routines go here
 
+DarkBoot1:
+	.arm	// this whole thing is running in ARM mode
+	mov		r0,12h
+	mov		cpsr,r0
+	ldr		r13,=0x3007F60
+	// custom code part
+	ldr		r0,=0x04000000
+	mov		r1,40h
+	strb	r1,[r0]
+	add		r0,50h
+	mov		r1,0FFh
+	strb	r1,[r0]
+	mov		r1,10h
+	strb	r1,[r0,4h]
+
+	ldr		r0,=DarkBoot1Return
+	bx		r0
+	poool
+	.thumb
 
 
+DarkBoot2:
+	mov		r0,40h
+	ldr		r1,=0x08001778|1
+	mov		r14,r15
+	bx		r1
+	ldr		r1,=0x0802F530|1
+	mov		r14,r15
+	bx		r1
 
+	// now for the custom stuff
+	ldr		r0,=0x04000000
+	mov		r1,40h
+	strb	r1,[r0]
+	add		r0,50h
+	mov		r1,0FFh
+	strb	r1,[r0]
+	mov		r1,10h
+	strb	r1,[r0,4h]
+	
+	// apply it again later
+	ldr		r0,=0x02009740
+	mov		r1,0FFh
+	strb	r1,[r0]
+	mov		r1,10h
+	strb	r1,[r0,4h]
+
+	pop		r15
+	poool
 
 // the entire function is taken directly from the game and pasted here so it can be modified more freely
 ThunderMove:
