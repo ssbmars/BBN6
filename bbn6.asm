@@ -111,50 +111,6 @@ VERBOSE equ 0
 .org freedspace1
 	.sym off :: .area 0x080C95E6 - 0x080C957C, 0x0	:: .sym on
 
-	/*
-	.definelabel func2, 0x08007004
-
-	push	r4-r7,r14
-	mov		r7,r0
-	bl
-	mov		r0,r7
-	ldr		r5,=
-	mov		r4,r0
-	bl		
-	bne		@@b2
-	mov		r0,r4
-	mov		r1,0ABh
-	bl		
-	ldr		r3,=
-	ldrh	r1,[r3,2Ah]
-	add		r0,r0,r1
-	cmp		r0,50h
-	bgt		@@b1
-	strh	r0,[r3,2Ah]
-	ldrb	r0,[r3]
-	mov		r1,r0
-	add		r1,1h
-	strb	r1,[r3]
-	mov		r1,r4
-	bl		
-	mov		r0,0h
-	b		@@exit
-	@@b2:
-	mov		r0,2h
-	b		@@exit
-	@@b1:
-	mov		r0,1h
-	@@exit:
-	pop		r4-r7,r15
-
-
-	func1:
-	push	r14
-	sub		r1,r0,1h
-	bl		func2
-	pop		r15
-	*/
-
 
 	.sym off :: .endarea :: .sym on
 // end of freedspace1
