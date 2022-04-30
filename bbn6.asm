@@ -10,15 +10,10 @@ EXE6G	equ 4
 	.if VERBOSE == 0 :: .sym off :: .endif
 .endmacro
 
-// VERSION gets defined as a command line argument when building
+// GameName gets defined as a command line argument when building
 
-.if		VERSION == BN6F ::	GameName equ "bn6f"
-.elseif VERSION == BN6G ::	GameName equ "bn6g"
-.elseif VERSION == EXE6F ::	GameName equ "exe6f"
-.elseif VERSION == EXE6G ::	GameName equ "exe6g"
-.else 
-	.error "VERSION not properly defined, can't continue"
-.endif
+// armips bbn6.asm -strequ GameName exe6f -equ AM_DEBUGGING 0 -sym out\output_exe6f.sym
+// armips bbn6.asm -strequ GameName exe6g -equ AM_DEBUGGING 0 -sym out\output_exe6g.sym
 
 ASMfldr equ "asm\\"
 OUTfldr equ "out\\"
