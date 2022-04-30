@@ -1,40 +1,42 @@
 .gba
+VERBOSE equ 0
 
 BN6F	equ 1
 BN6G	equ 2
 EXE6F	equ 3
 EXE6G	equ 4
 
-VERBOSE equ 0
 .macro symoff
 	.if VERBOSE == 0 :: .sym off :: .endif
 .endmacro
 
-.if VERSION == BN6F
-	.open "rom\bn6f.gba","out\output_bn6f.gba",0x8000000
-	.include "asm\bn6f_sym.asm"
+// VERSION gets defined as a command line argument when building
 
-.elseif VERSION == BN6G
-	.open "rom\bn6g.gba","out\output_bn6g.gba",0x8000000
-	.include "asm\bn6g_sym.asm"
-
-.elseif VERSION == EXE6F
-	.open "rom\exe6f.gba","out\output_exe6f.gba",0x8000000
-	.include "asm\exe6f_sym.asm"
-
-.elseif VERSION == EXE6G
-	.open "rom\exe6g.gba","out\output_exe6g.gba",0x8000000
-	.include "asm\exe6g_sym.asm"
-
+.if		VERSION == BN6F ::	GameName equ "bn6f"
+.elseif VERSION == BN6G ::	GameName equ "bn6g"
+.elseif VERSION == EXE6F ::	GameName equ "exe6f"
+.elseif VERSION == EXE6G ::	GameName equ "exe6g"
+.else 
+	.error "VERSION not properly defined, can't continue"
 .endif
 
+ASMfldr equ "asm\\"
+OUTfldr equ "out\\"
+ROMfldr equ "rom\\"
+
+INPUT_ROM	equ ROMfldr + GameName + ".gba"
+OUTPUT_ROM	equ ROMfldr + "output_" + GameName + ".gba"
+ADDR_LIST	equ ASMfldr + GameName + "_addr.asm"
+
+.open INPUT_ROM, OUTPUT_ROM, 0x8000000
+.include ADDR_LIST
 
 .if	AM_DEBUGGING
-	//.include "asm\debugging.asm"
+	//.include ASMfldr+ "debugging.asm"
 .endif
 
 //	run all other asm files here 
-//.include "asm\file.asm"
+//.include ASMfldr+ "file.asm"
 
 
 
@@ -124,8 +126,8 @@ VERBOSE equ 0
 //  ============  //	new routines go here
 
 .if AM_DEBUGGING
+	.arm	// this thing is running in ARM mode
 	DarkBoot1:
-		.arm	// this whole thing is running in ARM mode
 		mov		r0,12h
 		mov		cpsr,r0
 		ldr		r13,=0x3007F60
@@ -175,8 +177,7 @@ VERBOSE equ 0
 .endif
 
 // the entire function is taken directly from the game and pasted here so it can be modified more freely
-BuffDeathThunder equ 0
-ThunderMove:
+ThunderMove:	:: BuffDeathThunder equ 0
 	symoff
 	// r0 has target x
 	// r1 has target y
@@ -307,7 +308,7 @@ WindRWaitStep:
 	
 	.org 0x0803D340
 	
-	.area 0x0803DC30 - 0x0803D340, 0x0
+	.area 0x0803DC30 - 0x0803D340
 	
 	//  ============  //	new routines go here
 	
