@@ -120,8 +120,9 @@ ADDR_LIST	equ ASMfldr + GameName + "_addr.asm"
 
 //  ============  //	new routines go here
 
+.align 4
+.arm
 .if AM_DEBUGGING
-	.arm	// this thing is running in ARM mode
 	DarkBoot1:
 		mov		r0,12h
 		mov		cpsr,r0
