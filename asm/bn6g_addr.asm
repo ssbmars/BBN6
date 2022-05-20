@@ -12,3 +12,5 @@
 .definelabel screenio1, 0x080004BE
 .definelabel screenio2, 0x0803D1E4
 .definelabel screenio3, 0x0803D27C
+
+.definelabel DecrossChecker, 0x081D78E2
