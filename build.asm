@@ -7,9 +7,6 @@ EXE6G	equ 4
 
 // GameName gets defined as a command line argument when building
 
-// armips bbn6.asm -strequ GameName exe6f -equ AM_DEBUGGING 0 -sym out\output_exe6f.sym
-// armips bbn6.asm -strequ GameName exe6g -equ AM_DEBUGGING 0 -sym out\output_exe6g.sym
-
 ROMfldr equ "rom\\"
 OUTfldr equ "out\\"
 ASMfldr equ "asm\\"
