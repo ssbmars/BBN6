@@ -1,7 +1,7 @@
 # BBN6
  
 Build environment for researching and implementing improvements and fixes to the pvp mode in Battle Network 6  
-This is designed to be used with the Tango netplay solution over at <https://github.com/murkland/tango>  
+This is designed to be used with the Tango netplay solution over at <https://github.com/tangobattle/tango>  
 
 Compatible with BN6 and EXE6  
 Supported md5 hashes:  
