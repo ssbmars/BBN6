@@ -1,9 +1,11 @@
 BINGUS WISHLIST
 (these are not promises)
 
-BN6
+BN6 (and EXE6)
 
 fix elemtrap softlock and its other glitches
+
+slashglitch might have to be patched or limited
 
 
 
@@ -15,7 +17,7 @@ fix tornado glitch
 
 fix busterbug + exhausted glitch that allows busterbug procs to still hit with atk+ boosts
 
-fix shy bees
+fix shy bees (occurs if any trap is equipped)
 
 fix BadMedicine glitch
 
