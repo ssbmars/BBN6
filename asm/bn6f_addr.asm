@@ -14,3 +14,7 @@
 .definelabel screenio3, 0x0803D2A8
 
 .definelabel DecrossChecker, 0x081D78E6
+
+.definelabel PVPFade,	0x0812B792
+.definelabel PVPUnfade,	0x080E06A0
+.definelabel BossFade,	0x08099156

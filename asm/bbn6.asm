@@ -40,6 +40,17 @@
 		mov		r0,0Ch
 .endif
 
+// make it fade to a black screen when starting pvp
+
+.org PVPFade	// pvp 
+	mov r0,0Ch
+.org BossFade	//pve
+	mov r0,0Ch
+.org PVPUnfade	// triple battle
+	mov r0,8h
+.org PVPUnfade + 0x0C	// single battle
+	mov r0,8h
+
 
 // fix the glitch that prevents decrossing
 .org DecrossChecker
