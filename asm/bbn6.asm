@@ -123,7 +123,7 @@
 
 // End of ROM
 
-.org 0x08801000
+.org FreeSpace
 
 //  ============  //	new routines go here
 
@@ -338,21 +338,13 @@ WindRWaitStep:
 	pop		r15
 
 
+// Repoint megaman sprites
+.org 0x08031CEC
+;	.dw sussy1
 
+// Putting images here
+.org 0x08805000
 
-//	Free Space in the middle of the rom
-	//	(I don't actually know for certain that this space isn't used for something)
-	//	(whenever possible, use expanded space at the end of the rom instead)
-	
-	.org 0x0803D340
-	
-	.area 0x0803DC30 - 0x0803D340
-	
-	//  ============  //	new routines go here
-	
-	
-	
-	
-	.endarea
-// end of mid-rom freespace zone
+sussy1:
+;.import "art/sus1.bnsa"
 

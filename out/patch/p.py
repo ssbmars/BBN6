@@ -3,10 +3,12 @@ import sys
 import re
 import shutil
 
-games = ["bn6","exe6"]
+games = ["bn6","exe6","bn6_soundmod","exe6_soundmod"]
 patchnames = {
-	"bn6": ["MEGAMAN6_FXXBR6E_00.bps","MEGAMAN6_GXXBR5E_00.bps"],
-	"exe6": ["ROCKEXE6_GXXBR5J_00.bps","ROCKEXE6_RXXBR6J_00.bps"],
+	"bn6": ["BR6E_00.bps","BR5E_00.bps"],
+	"exe6": ["BR5J_00.bps","BR6J_00.bps"],
+	"bn6_soundmod": ["BR6E_00.bps","BR5E_00.bps"],
+	"exe6_soundmod": ["BR5J_00.bps","BR6J_00.bps"],
 }
 txt = ""
 base = ""
@@ -25,7 +27,7 @@ for game in games:
 		sys.stdout.write("New {} version? Latest Ver = {} \nFormat = X.Y.Z \n".format(game,latest))
 		version = input()
 	except IOError:
-		print("_versions: Could not open file.")
+		print("part1 _versions: Could not open file.")
 		continue
 	try:
 		with open("tango_patches/{}_versions.toml".format(game), 'a', encoding = 'utf-8') as file:
@@ -33,17 +35,23 @@ for game in games:
 			# skip if user input is obviously invalid
 			if version == "" or len(version) < 5:
 				continue
+			gamever = ""
+			if "bn6" in game:
+				gamever = "bn6"
+			elif "exe6" in game:
+				gamever = "exe6"
 			append = "[versions.'{}']\n".format(version)
-			append += "netplay_compatibility = \"exe{}\"\n".format(game)
-			txt += append
-			file.write(append)
+			append += "netplay_compatibility = \"bingus{}v{}\"\n".format(gamever,version)
+			if not("[versions.'{}']".format(version) in txt):
+				txt += append
+				file.write(append)
 	except IOError:
-		print("_versions: Could not open file.")
+		print("part2 _versions: Could not open file.")
 		continue
 
 	# load the base of the info.toml file
 	try:
-		with open("tango_patches/{}_base.toml".format(game), 'r') as file:
+		with open("tango_patches/{}_base.toml".format(game), 'r', encoding = 'utf-8') as file:
 			base = file.read()
 
 	except IOError:
@@ -60,6 +68,6 @@ for game in games:
 	newfile.close()
 
 	for name in patchnames[game]:
-		shutil.copy(name,"tango_patches/{}_bingus/v{}/{}".format(game,version,name))
+		shutil.copy("{}/{}".format(game,name),"tango_patches/{}_bingus/v{}/{}".format(game,version,name))
 
 	sys.stdout.write("\nSUCCESS: EXE {} v{} created in path \"{}/\"\n\n".format(game, version,folderpath))
