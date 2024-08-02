@@ -1,6 +1,6 @@
 # BBN6
- 
-Build environment for researching and implementing improvements and fixes to the pvp mode in Battle Network 6  
+
+Bingus Battle Network 6 is a patch that mitigates the balance issue of certain gameplay mechanics affecting player1 and player2 differently in pvp, usually giving a favorable outcome to only one player. Bingus modifies the behavior of the game to grant the same favorable outcomes to both players equally.  
 This is designed to be used with the Tango netplay solution over at <https://github.com/tangobattle/tango>  
 
 Compatible with BN6 and EXE6  
